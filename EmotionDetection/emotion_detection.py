@@ -1,0 +1,91 @@
+"""
+Emotion analysis module using Watson NLP API.
+Provides functionality to analyze text emotions.
+"""
+
+import os
+import requests
+from dotenv import load_dotenv
+
+load_dotenv()
+
+def emotion_detector(text_to_analyze):
+    """
+        Analyzes the emotion of the given text using Watson NLP service.
+
+    Args:
+        text_to_analyse: Text string to analyze
+
+    Returns:
+        Dictionary with 'emotion' and 'score' keys
+        Returns None values if analysis fails
+
+    """
+    url = os.getenv("WATSON_NLP_URL")
+    apikey = os.getenv("API_KEY")
+    watson_version = os.getenv("WATSON_VERSION")
+
+    params = {
+        "version": watson_version
+    }
+
+    payload = {
+        "text": text_to_analyze,
+        "features": {
+            "emotion": {
+                "document": True
+            }
+        }
+    }
+
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    try:
+        response = requests.post(
+            url,
+            json=payload,
+            headers=headers,
+            params=params,
+            auth=("apikey", apikey)
+        )
+
+        response.raise_for_status()
+
+        data= response.json()
+
+        emotion_data = data.get("emotion", {}).get("document", {}).get("emotion", {})
+
+        emotion = max(emotion_data, key=emotion_data.get)
+        score = emotion_data[emotion]
+
+        return {
+            "emotion": emotion,
+            "score": score
+        }
+
+
+    except requests.exceptions.HTTPError as error:
+        print(f"HTTP Error during emotion analysis: {error}")
+        if response:
+            print(f"Response status: {response.status_code}")
+            print(f"Response body: {response.text}")
+        return {"emotion": None, "score": None}
+
+    except requests.exceptions.ConnectionError as error:
+        print(f"Connection Error: Unable to reach Watson API - {error}")
+        return{"emotion": None, "score": None}
+
+    except requests.exceptions.Timeout as error:
+        print(f"Timeout Error: Whatson API took too long to respond - {error}")
+        return{"emotion": None, "score": None}
+
+    except requests.exceptions.RequestException as error:
+        print(f"Error during emotion analysis: {error}")
+        return{"emotion": None, "score": None}
+
+    except (KeyError, ValueError) as error:
+        print(f"Error parsing Watson NLU response: {error}")
+        return{"emotion": None, "score": None}
+    

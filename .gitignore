@@ -127,3 +127,92 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# ==============================================
+# SECURITY: API Keys, Credentials & Secrets
+# ==============================================
+# Environment files
+.env
+.env.*
+.env.local
+.env.*.local
+!.env.example
+!.env.template
+
+# API Keys & Credentials
+*.key
+*.pem
+*.p12
+*.pfx
+*.cer
+*.crt
+secrets.json
+credentials.json
+config.json
+.secrets/
+
+# Watson/IBM Cloud credentials
+watson_credentials.json
+ibm-credentials.env
+vcap-local.json
+
+# Configuration files with sensitive data
+*.config
+local_settings.py
+settings_local.py
+
+# ==============================================
+# IDE & EDITOR FILES
+# ==============================================
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ==============================================
+# OS FILES
+# ==============================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# ==============================================
+# TEMPORARY & LOG FILES
+# ==============================================
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# ==============================================
+# DATABASE FILES
+# ==============================================
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+
+# ==============================================
+# BACKUP FILES
+# ==============================================
+*.bak
+*.backup
+*.old
