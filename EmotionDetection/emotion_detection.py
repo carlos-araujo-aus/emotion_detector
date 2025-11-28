@@ -21,10 +21,31 @@ def emotion_detector(text_to_analyze):
         Returns None values if analysis fails
 
     """
+    if not text_to_analyze or not text_to_analyze.strip():
+        return {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
+    
     url = os.getenv("WATSON_NLP_URL")
     apikey = os.getenv("API_KEY")
     watson_version = os.getenv("WATSON_VERSION")
 
+    if not url or not apikey:
+        print("Error: Missing API credentials in .env file")
+        return {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
+    
     params = {
         "version": watson_version
     }
@@ -57,6 +78,16 @@ def emotion_detector(text_to_analyze):
 
         emotion_data = data.get("emotion", {}).get("document", {}).get("emotion", {})
 
+        if not emotion_data:
+            return {
+                'anger': None,
+                'disgust': None,
+                'fear': None,
+                'joy': None,
+                'sadness': None,
+                'dominant_emotion': None
+            }
+
         dominant_emotion = max(emotion_data, key=emotion_data.get)
 
         return {
@@ -65,7 +96,6 @@ def emotion_detector(text_to_analyze):
             'fear': emotion_data.get('fear', 0.0),
             'joy': emotion_data.get('joy', 0.0),
             'sadness': emotion_data.get('sadness', 0.0),
-            'anger': emotion_data.get('anger', 0.0),
             'dominant_emotion': dominant_emotion           
         }
 
@@ -75,21 +105,56 @@ def emotion_detector(text_to_analyze):
         if response:
             print(f"Response status: {response.status_code}")
             print(f"Response body: {response.text}")
-        return {"emotion": None, "score": None}
+        return {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
 
     except requests.exceptions.ConnectionError as error:
         print(f"Connection Error: Unable to reach Watson API - {error}")
-        return{"emotion": None, "score": None}
+        return {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
 
     except requests.exceptions.Timeout as error:
         print(f"Timeout Error: Whatson API took too long to respond - {error}")
-        return{"emotion": None, "score": None}
+        return {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
 
     except requests.exceptions.RequestException as error:
         print(f"Error during emotion analysis: {error}")
-        return{"emotion": None, "score": None}
+        return {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
 
     except (KeyError, ValueError) as error:
         print(f"Error parsing Watson NLU response: {error}")
-        return{"emotion": None, "score": None}
+        return {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
     
